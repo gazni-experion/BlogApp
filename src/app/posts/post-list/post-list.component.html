@@ -1,0 +1,35 @@
+
+<div class="table">
+    <div class="row m-4">
+        <h5 style="text-align: center;">Posts</h5>
+    </div>
+    <table class="table table-hover table-dark table-striped">
+        <thead>
+            <th>Post Id</th>
+            <th>Title</th>
+            <th>Description</th>
+            <th>Created Date</th>
+            <th>CategoryName</th>
+            <th>Actions</th>
+        </thead>
+        <tbody>
+            <tr *ngFor="let pst of postsService.posts | paginate:{itemsPerPage:5, currentPage: page}">
+                <td>{{pst.PostId}}</td>
+                <td>{{pst.Title}}</td>
+                <td>{{pst.Description}}</td>
+                <td>{{pst.CreatedDate | date: 'dd-MMM-yyyy'}}</td>
+                <td>{{pst.CategoryName}}</td>
+                <td>
+                    <button class="btn btn-outline-info" type="button"><i class="bi bi-pencil-square"></i></button>
+                    &nbsp;
+                    <button class="btn btn-outline-danger" type="button"><i class="bi bi-x-circle"></i></button>
+                </td>
+
+            </tr>
+        </tbody>
+
+    </table>
+    <div class="footer">
+        <pagination-controls (pageChange)="page = ($event)"></pagination-controls>
+    </div>
+</div>

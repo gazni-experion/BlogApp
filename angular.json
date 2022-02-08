@@ -28,7 +28,9 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles.scss"
+              "src/styles.scss",
+              "node_modules/bootstrap/scss/bootstrap.scss",
+              "node_modules/bootstrap-icons/font/bootstrap-icons.scss"
             ],
             "scripts": []
           },
@@ -123,6 +125,10 @@
           }
         }
       }
-    }},
-  "defaultProject": "BlogApp"
+    }
+  },
+  "defaultProject": "BlogApp",
+  "cli": {
+    "analytics": "6d6b44b3-2b02-481a-8699-90c355bae7c0"
+  }
 }

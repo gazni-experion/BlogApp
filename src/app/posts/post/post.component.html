@@ -1,107 +1,154 @@
-<h4 style="text-align: center">Add a new post</h4>
-<div class="row border m-4">
-
-    <!-- Form -->
+<!-- Template driven form -->
+<div class="row">
+    <div class=" d-flex justify-content-center">
+    <h4 style="text-align: center;">Add a new Post</h4>
+    </div>
+    <div class="d-flex justify-content-end">
+    <button type="button" class="rounded-pill btn btn-outline-info p-2" (click)="addPost()"><i class="bi bi-plus"></i></button>
+    </div>
+    </div>
+<div class="container border mt-4">
   <form
+    [formGroup]="ngForm"
     #form="ngForm"
     name="ngForm"
     class="form-group p-3"
     (ngSubmit)="onSubmit(form)"
   >
-    <div class="row p-5">
-      <div class="col-4 mb-3">
-
-        <!-- Post Id -->
-        <input
-          type="hidden"
-          name="PostId"
-          [(ngModel)]="postsService.formData.PostId"
-        />
-
-        <!-- Title -->
-        <label for="Title" class="form-label">Title: </label>
-        <input type="text" class="form-control" id="Title" placeholder="Enter
-        the title of post" 
-         #Title="ngModel"
-        [(ngModel)]="postsService.formData.Title"
-        required
-        [ngClass]="{'is-invalid':Title.touched && Title.invalid }"
+    <div class="row " >
+       <!-- Category drop down -->
+      <div class="form-group p-2 m-3">
+        <label for="Id">Category: </label>
+        <select
+          [(ngModel)]="postsService.formData.CategoryId"
+          name="CategoryId"
+          id="CategoryId"
+          class="form-control"
+          #CategoryId="ngModel"
+          required
         >
+          <option value="0" selected disabled>Select Category...</option>
+          <option
+            *ngFor="let Category of postsService.categories"
+            value="{{ Category.Id }}"
+          >
+            {{ Category.Name }}
+          </option>
+        </select>
 
         <!-- Validation -->
         <p
-          *ngIf="Title.touched && Title.invalid"
+          *ngIf="CategoryId.touched && CategoryId.invalid"
           class="validation-error"
         >
+          <span *ngIf="CategoryId.errors.required" style="color: crimson"
+            >Category is required!</span
+          >
+        </p>
+      </div>
+
+      <div class="row" *ngFor="let post of posts().controls; let i=index" [formGroupName]="i">
+        <hr>
+      <!-- Post id Hidden -->
+      <input
+        type="hidden"
+        name="PostId"
+        [(ngModel)]="postsService.formData.PostId"
+      />
+
+      <!-- Title -->
+      <div class="form-group col-6 ms-2">
+        <label for="Title">Title: </label>
+        <input
+          type="text"
+          class="form-control"
+          name="Title"
+          #Title="ngModel"
+          [(ngModel)]="postsService.formData.Title"
+          placeholder="Enter Title"
+          required
+          minlength="3"
+          maxlength="25"
+          [ngClass]="{
+            'is-invalid': Title.touched && Title.invalid
+          }"
+        />
+
+        <!-- Validation -->
+        <p *ngIf="Title.touched && Title.invalid" class="validation-error">
           <span *ngIf="Title.errors.required" style="color: crimson"
             >Title is required!</span
           >
         </p>
       </div>
 
-      <!-- Category -->
-      <div class="col-4 mb-3">
-        <label for="Category" class="form-label">Category: </label>
-        <select
-          [(ngModel)]="postsService.formData.CategoryId"
+     
+      <!-- Created date -->
+      <div class="form-group col-5">
+        <label for="CreatedDate">Created date: </label>
+        <input
+          type="date"
           class="form-control"
-          aria-label="Category"
-        >
-          <option value="0" disabled selected>Select your category...</option>
-          <option
-            *ngFor="let category of postsService.categories"
-            value="{{ category.Id }}"
-          >
-            {{ category.Name }}
-          </option>
-        </select>
-      </div>
+          name="CreatedDate"
+          #CreatedDate="ngModel"
+          [(ngModel)]="postsService.formData.CreatedDate"
+          required
+          [ngClass]="{
+            'is-invalid': CreatedDate.touched && CreatedDate.invalid
+          }"
+        />
 
-      <!--Created Date -->
-      <div class="col-4 mb-3">
-        <label for="Date" class="form-label">Date: </label>
-        <input type="date" class="form-control" id="Date"
-         #Date="ngModel"
-        [ngClass]="{'is-invalid':Date.touched && Date.invalid }"
+        <!-- Validation -->
+        <p
+          *ngIf="CreatedDate.touched && CreatedDate.invalid"
+          class="validation-error"
+        >
+          <span *ngIf="CreatedDate.errors.required" style="color: crimson"
+            >Date Of creation is required!</span
+          >
+        </p>
+      </div>
+    
+
+    <!-- Description -->
+    <div class="form-group m-3">
+      <label for="Description">Description: </label>
+      <textarea
+      rows="4"
+      type="text"
+        class="form-control"
+        name="Description"
+        #Description="ngModel"
+        [(ngModel)]="postsService.formData.Description"
+        placeholder="Enter Description"
         required
-        [(ngModel)]="postsService.formData.CreatedDate">
+        minlength="5"
+        [ngClass]="{ 'is-invalid': Description.touched && Description.invalid }"
+      ></textarea>
 
-        <!-- Validation -->
-        <p
-          *ngIf="Date.touched && Date.invalid"
-          class="validation-error"
+      <!-- Validation -->
+      <p
+        *ngIf="Description.touched && Description.invalid"
+        class="validation-error"
+      >
+        <span *ngIf="Description.errors.required" style="color: crimson"
+          >Description is required!</span
         >
-          <span *ngIf="Date.errors.required" style="color: crimson"
-            >Date is required!</span
-          >
-        </p>
-      </div>
+      </p>
+    <button type="button" class="rounded-pill btn btn-outline-danger float-end mt-3" (click)="deletePost(i)"><i class="bi bi-dash"></i></button>
+    </div>
+    </div> 
+    </div> 
 
-      <!-- Description -->
-      <div class="mb-3">
-        <label for="Description" class="form-label">Description: </label>
-        <textarea class="form-control" id="Description" rows="3"
-                 #Description="ngModel"
-                 required
-                [ngClass]="{'is-invalid':Description.touched && Description.invalid }"
-        [(ngModel)]="postsService.formData.Description"></textarea>
-
-        <!-- Validation -->
-        <p
-          *ngIf="Description.touched && Description.invalid"
-          class="validation-error"
-        >
-          <span *ngIf="Date.errors.required" style="color: crimson"
-            >Description is required!</span
-          >
-        </p>
-      </div>
-
-      <!-- Buttons -->
-      <div class="mb-3">
-        <button type="reset" class="btn btn-outline-danger m-2">Clear</button>
-        <button type="submit" class="btn btn-primary px-5 m-2">Post</button>
-      </div>
+    <!-- Submit button -->
+    <div class="form-group p-3">
+      <button
+        type="submit"
+        class="btn btn-primary"
+        [disabled]="!(form.valid && form.dirty)"
+      >
+        Submit
+      </button>
     </div>
   </form>
 </div>
